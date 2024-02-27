@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Database Entries</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h2 class="mb-4">Billing Entries</h2>
+        <ul class="list-group">
+            {% for entry in entries %}
+                <li class="list-group-item">
+                    Company Name: {{ entry.client_company.name }}<br>
+                    Contact Name: {{ entry.contact_name }}<br>
+                    Company Contact: {{ entry.client_company.contact_name }}<br>
+                    Company Address: {{ entry.client_company.address }}<br>
+                    Company Phone: {{ entry.client_company.phone }}<br>
+                    Company Email: {{ entry.client_company.email }}<br>
+                    Hours: {{ entry.hours }}<br>
+                    Description: {{ entry.description }}<br>
+<!--                     Entry Date: {{ entry.entry_date }}<br> -->
+                    Entry Date: 
+                    {% if entry.entry_date %}
+                        {% set parts = entry.entry_date.split('-') %}
+                        {% set month = parts[1] %}
+                        {% set day = parts[2] %}
+                        {% set year = parts[0] %}
+                        {{ dict({'01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'})[month] }} {{ day|int }}, {{ year }}<br>
+                    {% endif %}
+                    Payment Status: {{ entry.payment_status }}<br>
+<!--                     Follow Up Date: {{ entry.client_company.follow_up_date }} -->
+                    Follow Up Date: {% if entry.follow_up_date %}
+                        {% set parts = entry.follow_up_date.split('-') %}
+                        {% set month = parts[1] %}
+                        {% set day = parts[2] %}
+                        {% set year = parts[0] %}
+                        {{ dict({'01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'})[month] }} {{ day|int }}, {{ year }}<br>
+                    {% endif %}
+                    <div class="float-right">
+                        <a href="/edit_billing_entry/{{ entry.id }}" class="btn btn-sm btn-primary">Edit</a>
+                        <form action="/delete_entry/{{ entry.id }}" method="post" onsubmit="return confirm('Are you sure?');" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+

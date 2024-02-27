@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Billing Entry</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+        {% include 'header.html' %}
+            <div class="container">
+                <h2>Edit Entry</h2>
+                <form action="{{ url_for('update_entry_by_id', entry_id=entry.id) }}" method="post">
+                    <!-- Form fields here, pre-filled with the entry's current details -->
+                    <div class="form-group">
+                        <label for="contactName">Contact Name</label>
+                        <input type="text" class="form-control" id="contactName" name="contact_name" value="{{ entry.contact_name }}">
+                    </div>
+<div class="form-group">
+        <label for="contactName">Contact Name</label>
+        <input type="text" class="form-control" id="contactName" name="contact_name" value="{{ entry.contact_name }}" required>
+    </div>
+    <div class="form-group">
+        <label for="hours">Hours</label>
+        <input type="number" class="form-control" id="hours" name="hours" value="{{ entry.hours }}" min="0" step="0.01" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" required>{{ entry.description }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="entryDate">Entry Date</label>
+        <input type="date" class="form-control" id="entryDate" name="entry_date" value="{{ entry.entry_date }}" required>
+    </div>
+    <div class="form-group">
+        <label for="paymentStatus">Payment Status</label>
+        <select class="form-control" id="paymentStatus" name="payment_status" required>
+            <option value="Pending" {% if entry.payment_status == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="Completed" {% if entry.payment_status == 'Completed' %}selected{% endif %}>Completed</option>
+            <option value="Cancelled" {% if entry.payment_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="followUpDate">Follow Up Date</label>
+        <input type="date" class="form-control" id="followUpDate" name="follow_up_date" value="{{ entry.follow_up_date }}">
+    </div>                    <button type="submit" class="btn btn-primary">Update Entry</button>
+                </form>
+            </div>
+        {% include 'footer.html' %}
+
+
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+            <script>
+                document.getElementById('editButton').addEventListener('click', function() {
+                    document.getElementById('displayContent').style.display = 'none';
+                    document.getElementById('editContent').style.display = 'block';
+
+                    // Populate form with existing values
+                    document.getElementById('contactNameInput').value = document.getElementById('displayContactName').textContent.replace('Contact Name: ', '');
+                    document.getElementById('hoursInput').value = document.getElementById('displayHours').textContent.replace('Hours: ', '');
+                    document.getElementById('descriptionInput').value = document.getElementById('displayDescription').textContent.replace('Description: ', '');
+                    // Assuming Payment Status is either "Pending" or "Paid"
+                    document.getElementById('paymentStatusInput').value = document.getElementById('displayPaymentStatus').textContent.replace('Payment Status: ', '');
+                });
+    </script>
+</body>
+</html>

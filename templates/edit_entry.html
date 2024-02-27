@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Billing Entry</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+        {% include 'header.html' %}
+            <div class="container mt-5">
+                <h2>Edit Billing Entry</h2>
+                <form action="{{ url_for('update_entry', entry_id=entry.id) }}" method="post">
+                    <!-- CSRF token omitted for brevity -->
+                    <div class="form-group">
+                        <label for="contactName">Contact Name</label>
+                        <input type="text" class="form-control" id="contactName" name="contact_name" value="{{ entry.contact_name }}">
+                    </div>
+                    <!-- Add other fields similarly -->
+                    <button type="submit" class="btn btn-primary">Update Entry</button>
+                </form>
+            </div>
+        {% include 'footer.html' %}
+
+
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+            <script>
+                document.getElementById('editButton').addEventListener('click', function() {
+                    document.getElementById('displayContent').style.display = 'none';
+                    document.getElementById('editContent').style.display = 'block';
+
+                    // Populate form with existing values
+                    document.getElementById('contactNameInput').value = document.getElementById('displayContactName').textContent.replace('Contact Name: ', '');
+                    document.getElementById('hoursInput').value = document.getElementById('displayHours').textContent.replace('Hours: ', '');
+                    document.getElementById('descriptionInput').value = document.getElementById('displayDescription').textContent.replace('Description: ', '');
+                    // Assuming Payment Status is either "Pending" or "Paid"
+                    document.getElementById('paymentStatusInput').value = document.getElementById('displayPaymentStatus').textContent.replace('Payment Status: ', '');
+                });
+    </script>
+</body>
+</html>

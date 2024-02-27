@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Result</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">SweeneyScanner</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/view_entries">Entries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact Sweeney</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h2 class="mb-4">Upload Result2</h2>
+        <div class="alert alert-success" role="alert">
+            Image uploaded successfully!
+        </div>
+<!--         <div>
+            <h4>Response:</h4>
+            <div>
+                <h4>Parsed Name:</h4>
+                <p>{{ name }}</p>
+            </div>
+<!--             <!-- Textarea for editing the response -->
+<!--             <form class="form-control" id="editableText" method="post">
+                <textarea id="editableTextArea" name="edited_text">{{ extracted_text }}</textarea>
+                <button type="submit">Submit</button>
+            </form>         -->
+<!--             <textarea class="form-control" id="editableTextArea" name="edited_text" rows="10">{{ extracted_text }}</textarea>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="saveText()">Save Edited Text</button> -->
+<!--          <form method="post" action="/submit_entry">
+            {% for key, value in entry_data.items() %}
+             <div class="form-group">
+                    <label for="{{ key }}">{{ key.replace('_', ' ').title() }}:</label>
+                    <textarea class="form-control" id="{{ key }}" name="{{ key }}">{{ value }}</textarea>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form> -->
+        
+<!--         <form method="post" action="/submit_entry">
+            {% for key, value in entry_data.items() %}
+                <div class="form-group">
+                    <label for="{{ key }}">{{ key.replace('_', ' ').title() }}:</label> -->
+<!--                     {% if key == 'payment_status' %} -->
+                        <!-- Radio buttons for payment_status
+<!--                         <div>
+                            <label>
+                                <input type="radio" name="{{ key }}" value="Yes" {% if value == True %} checked {% endif %}>
+                                Yes
+                            </label>
+                            <label>
+                                <input type="radio" name="{{ key }}" value="No" {% if value == False %} checked {% endif %}>
+                                No
+                            </label>
+                        </div>
+                    {% else %}
+                        <!-- Textarea for other fields -->
+<!--                         <textarea class="form-control" id="{{ key }}" name="{{ key }}">{{ value }}</textarea>
+                    {% endif %}
+                </div>
+            {% endfor %} -->
+<!--             <button type="submit" class="btn btn-primary">Submit</button>
+        </form> --> --> -->
+        
+<!--         <form method="post" action="/submit_entry">
+    {% for key, value in entry_data.items() %}
+        <div class="form-group">
+            <label for="{{ key }}">{{ key.replace('_', ' ').title() }}:</label>
+            {% if key == 'payment_status' %}
+                <div>
+                    <label>
+                        <input type="radio" name="{{ key }}" value="Yes" {% if value == True %} checked {% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="{{ key }}" value="No" {% if value == False %} checked {% endif %}>
+                        No
+                    </label>
+                </div>
+            {% elif key in ['entry_date', 'follow_up_date'] %}
+                <input type="date" class="form-control" id="{{ key }}" name="{{ key }}" value="{{ value | default('', true) }}">
+            {% else %}
+                <textarea class="form-control" id="{{ key }}" name="{{ key }}">{{ value }}</textarea>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form> -->
+        
+        <form method="post" action="/submit_entry">
+    {% for key, value in entry_data.items() %}
+        <div class="form-group">
+            <label for="{{ key }}">{{ key.replace('_', ' ').title() }}:</label>
+            {% if key == 'client_company_name' %}
+                <!-- Dropdown for existing companies -->
+                <select class="form-control" name="existing_company">
+                    <option value="">Select existing company</option>
+                    {% for company in companies %}
+                        <option value="{{ company.id }}">{{ company.name }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Text input for new company -->
+                <input type="text" class="form-control" name="new_company" placeholder="Or enter new company name">
+            {% elif key == 'payment_status' %}
+                 <div>
+                    <label>
+                        <input type="radio" name="{{ key }}" value="Yes" {% if value == True %} checked {% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="{{ key }}" value="No" {% if value == False %} checked {% endif %}>
+                        No
+                    </label>
+                </div>
+            {% elif key == 'entry_date' %}
+            <!-- Hidden input for entry date -->
+                <input type="hidden" name="entry_date" value="{{ current_date }}">
+            {% elif key in ['follow_up_date'] %}
+                <input type="date" class="form-control" id="{{ key }}" name="{{ key }}" value="{{ value | default('', true) }}">
+            {% else %}
+                <textarea class="form-control" id="{{ key }}" name="{{ key }}">{{ value }}</textarea>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+        <a href="/" class="btn btn-secondary mt-3">Upload Another Image</a> --> -->
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+//     function saveText() {
+//         var editedText = document.getElementById('editableText').value;
+
+//         // Send a POST request to the server
+//         fetch('/save_text', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//             },
+//             body: 'text=' + encodeURIComponent(editedText)
+//         })
+//         .then(response => {
+//             if (response.ok) {
+//                 // Redirect to the home page
+//                 window.location.href = '/view_entries';
+//             } else {
+//                 // Handle errors
+//                 console.error('Error:', response.statusText);
+//             }
+//         })
+//         .catch((error) => {
+//             console.error('Error:', error);
+//         });
+
+//     }
+    function saveText() {
+    var editedText = document.getElementById('editableTextArea').value; // Correctly reference the textarea
+
+    fetch('/save_text', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'text=' + encodeURIComponent(editedText)
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/view_entries';
+        } else {
+            console.error('Error:', response.statusText);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
+</body>
+</html>

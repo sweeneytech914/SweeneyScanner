@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unauthorized</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container mt-5">
+        <h2>Unauthorized Access</h2>
+        <p>You are not logged in. Please <a href="{{ url_for('login') }}">login</a> to view this page.</p>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>

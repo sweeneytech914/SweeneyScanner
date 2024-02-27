@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+     {% include 'header.html' %}
+
+<!--     <div class="container mt-4">
+        <h2 class="mb-4">Companies</h2>
+        {% for company in companies %}
+            <div class="card mb-3">
+                <h3>{{ company.name }}</h3>
+                <p>Contact Name: {{ company.contact_name }}</p>
+                <p>Phone: {{ company.phone }}</p>
+                <p>Email: {{ company.email }}</p>
+                   {% if company.all_payments_yes %}
+                            <p>Payment Status: Yes</p>
+                        {% else %}
+                            <p>Payment Status: No</p>
+                   {% endif %}
+                {% for entry in company.billing_entries %}
+                    <p>
+                        <a class="btn btn-link" data-toggle="collapse" href="#collapse{{ entry.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            Entry {{ entry.entry_date }}
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapse{{ entry.id }}">
+                        <div class="card card-body">
+                            <!-- Entry details -->
+<!--                             Contact Name: {{ entry.contact_name }}<br>
+                            Hours: {{ entry.hours }}<br>
+                            Description: {{ entry.description }}<br>
+                            Payment Status: {{ entry.payment_status }}<br>
+<!--                             <!-- Add other entry fields as needed -->
+<!--                         </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div> --> --> --> -->
+    
+        <div class="container mt-4">
+        <h2 class="mb-4">Companies</h2>
+        {% for company in companies %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">{{ company.name }}</h3>
+                    <p class="card-text">Contact Name: {{ company.contact_name }}</p>
+                    <p class="card-text">Phone: {{ company.phone }}</p>
+                    <p class="card-text">Email: {{ company.email }}</p>
+                       {% if company.all_payments_yes %}
+                                <p>Payment Status: Yes</p>
+                            {% else %}
+                                <p>Payment Status: No</p>
+                       {% endif %}
+                    {% for entry in company.billing_entries %}
+                        <div class="mb-2">
+                            <a class="btn btn-link" data-toggle="collapse" href="#collapse{{ entry.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                Billing Entry on  
+                                {% if entry.entry_date %}
+                                    {% set parts = entry.entry_date.split('-') %}
+                                    {% set month = parts[1] %}
+                                    {% set day = parts[2] %}
+                                    {% set year = parts[0] %}
+                                    {{ dict({'01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'})[month] }} {{ day|int }}, {{ year }}<br>
+                                {% endif %}
+                            </a>
+                            <div class="collapse" id="collapse{{ entry.id }}">
+                                <div class="card card-body">
+                                    Contact Name: {{ entry.contact_name }}<br>
+                                    Hours: {{ entry.hours }}<br>
+                                    Description: {{ entry.description }}<br>
+                                    Payment Status: {{ entry.payment_status }}<br>
+                                    <!-- Add other entry fields as needed -->
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     {% include 'footer.html' %}
+</body>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</html>
