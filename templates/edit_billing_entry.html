@@ -7,7 +7,7 @@
 </head>
 <body>
         {% include 'header.html' %}
-            <div class="container">
+    <div class="container">
                 <h2>Edit Entry</h2>
                 <form action="{{ url_for('update_entry_by_id', entry_id=entry.id) }}" method="post">
                     <!-- Form fields here, pre-filled with the entry's current details -->
@@ -44,7 +44,7 @@
         <input type="date" class="form-control" id="followUpDate" name="follow_up_date" value="{{ entry.follow_up_date }}">
     </div>                    <button type="submit" class="btn btn-primary">Update Entry</button>
                 </form>
-            </div>
+    </div>
         {% include 'footer.html' %}
 
 

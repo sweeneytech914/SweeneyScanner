@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
+    <style>
+        /* Additional styling for the sidebar */
+        .sidebar {
+            height: 100vh; /* Full height */
+            width: 250px; /* Set the width of the sidebar */
+            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1; /* Stay on top */
+            top: 0; /* Stay at the top */
+            left: 0;
+            background-color: #f8f9fa; /* Light grey background */
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding-top: 20px;
+            transition: width 0.3s; /* Smooth transition for width */
+        }
+
+        /* Style sidebar links */
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #333;
+            display: block;
+        }
+
+        /* Style the main content */
+        .main-content {
+            margin-left: 250px; /* Same as the width of the sidebar */
+            padding: 20px;
+            transition: margin-left 0.3s; /* Smooth transition for margin-left */
+        }
+
+        /* Style for the sidebar when it's closed */
+        .sidebar-closed {
+            width: 0; /* Hide the sidebar */
+        }
+
+        /* Adjust the main content when sidebar is closed */
+        .main-content-closed {
+            margin-left: 0; /* Expand the main content to full width */
+        }
+
+        /* Style for the 3-dot icon */
+        .toggle-icon {
+            cursor: pointer;
+            font-size: 20px;
+            position: absolute;
+            top: 10px;
+            right: -30px; /* Position the icon outside the sidebar */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div class="sidebar" id="sidebar">
+        <h3 class="ml-2">SweeneyScanner</h3>
+        <a href="#">Users</a>
+        <a href="#">Onboarding new user</a>
+        <!-- <a href="#">Reports</a>
+        <a href="#">Settings</a> -->
+    </div>
+
+    <div class="toggle-icon" onclick="toggleSidebar()">&#8942;</div> <!-- 3-dot icon -->
+
+    <div class="main-content" id="mainContent">
+        <div class="d-flex flex-row justify-content-between">
+            <h1>Admin Panel</h1>
+        </div>
+        <section>
+            <!-- Admin functionalities like user management, content control -->
+
+            <div class="container mt-5">
+
+            </div>
+              
+
+        </section>
+    </div>
+
+    {#
+        {% include 'footer.html' %}
+    #}
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("mainContent");
+            sidebar.classList.toggle("sidebar-closed");
+            mainContent.classList.toggle("main-content-closed");
+        }
+    </script>
+</body>
+</html>

@@ -12,16 +12,20 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_principal import Permission, RoleNeed, identity_loaded, UserNeed
 
-from env import ADMIN_USERNAME, ADMIN_PASSWORD, DATABASE_URI, SECRET_KEY
+from envc import ADMIN_USERNAME, ADMIN_PASSWORD,ADMIN_EMAIL, DATABASE_URI, SECRET_KEY, User
 
-
+from flask import Flask, render_template, flash, redirect, url_for
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+app.config['SQLAlchemy_TRACK_MODIFICATION'] = False
 db = SQLAlchemy(app)
+admin = Admin()
 
 # app.config['SECRET_KEY'] = 'your_generated_secret_key_here'  # For development
 # OR for production, more securely:
@@ -41,6 +45,32 @@ print("Database:", DATABASE_URI)
 
 
 
+# Create admin page
+
+# @login_required 
+@app.route('/admin')
+def admin():
+    # id = current_user.id
+    # if id == 1:
+    users = db.session.execute(db.select(User)).scalars()
+    print(users)
+    return render_template('admin/admin_panel.html', users=users)
+    # else:
+    #     flash('sorry you must be the admin to access the admin page...')
+    #     return redirect(url_for('dashboard'))
+
+@app.route('/add_user_from_admin')
+def add_user():
+    return render_template('admin/add_user.html')
+
+
+
+@app.route('/admin/edit_user')
+def edit_user():
+
+    return render_template('admin_panel.html')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -54,7 +84,9 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
-    
+
+    def __repr__(self) -> str:
+        return f'{self.id} - {self.username}'    
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -405,6 +437,24 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if request.method == "POST":
+        _id = request.form.get('_id')
+        username=request.form.get('username')
+        fullname = request.form.get('fullname')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.get(_id)
+        user.username=username
+        user.email=email
+        
+        user.set_password(password)
+        db.session.commit()
+    return render_template('profile.html')
 
 
 @app.route('/admin/dashboard')

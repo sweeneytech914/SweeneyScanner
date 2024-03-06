@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Billing Entry</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+<div class="container mt-5">
+        
+    <hr class="mt-0 mb-4">
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Profile Picture</div>
+                    <div class="card-body text-center"> <img class="rounded-circle mb-2 image-fluid"
+                            src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="" width="200" height="200">
+                        <div class="small font-italic text-muted mb-3">JPG or PNG no larger than 5 MB</div> <button
+                            class="btn btn-primary" type="button">Upload new image</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="card mb-4">
+                    <div class="card-header">Account Details</div>
+                    <div class="card-body">
+                        <form action="/profile" method="post">
+
+                            <input type="hidden" value="{{ current_user.id }}" name="_id">
+                            
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputUsername">Username</label> <input class="form-control"
+                                        id="inputUsername" type="text" placeholder="Enter your username" 
+                                        value="{{ current_user.username }}" name="username">
+                                </div>
+                                
+                                <div class="col-md-6"> <label class="small mb-1" for="inputLastName">Full Name</label>
+                                    <input class="form-control" id="inputLastName" type="text"
+                                        placeholder="Enter your last name" value="{{ current_user.username }}"
+                                        name="fullname"></div>
+                            </div>
+
+                            <div class="mb-3"> 
+                                <label class="small mb-1" for="inputEmailAddress">Email address</label>
+                                <input class="form-control" id="inputEmailAddress" type="email"
+                                    placeholder="Enter your email address" value="{{ current_user.email }}"
+                                    name="email">
+                            </div>
+                            <div class="mb-3"> 
+                                <label class="small mb-1" for="password">Password</label>
+                                <input class="form-control" id="password" type="password"
+                                    placeholder="Enter your password" value="{{ current_user.password }}"
+                                    name="password">
+                                    <i class="fa fa-eye password-icon" id="togglePassword" style="position: absolute; top: 75%; right: 30px; transform: translateY(-50%); cursor: pointer;"></i>
+                            </div>
+
+                            <script>
+                                var password = document.getElementById("password");
+                                var togglePassword = document.getElementById("togglePassword");
+                            
+                                togglePassword.addEventListener('click', function () {
+                                    // Check if the password is visible
+                                    if (password.type === "password") {
+                                        password.type = "text";
+                                        togglePassword.classList.remove('fa-eye');
+                                        togglePassword.classList.add('fa-eye-slash');
+                                    } else {
+                                        password.type = "password";
+                                        togglePassword.classList.remove('fa-eye-slash');
+                                        togglePassword.classList.add('fa-eye');
+                                    }
+                                });
+                            </script>
+                                
+                            </div> <button class="btn btn-primary" type="submit">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+    {% include 'footer.html' %}
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>
