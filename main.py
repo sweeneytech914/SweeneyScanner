@@ -2,17 +2,21 @@ from dotenv import load_dotenv
 import os
 import base64
 import requests
-from flask import Flask, request, render_template, redirect, url_for, abort
+from flask import (Flask, request, render_template, redirect, 
+                   url_for, abort)
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 import re
 from datetime import date, datetime
 from config import Config
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (generate_password_hash, 
+                               check_password_hash)
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_principal import Permission, RoleNeed, identity_loaded, UserNeed
 
-from envc import ADMIN_USERNAME, ADMIN_PASSWORD,ADMIN_EMAIL, DATABASE_URI, SECRET_KEY, User
+from envc import (ADMIN_USERNAME, ADMIN_PASSWORD,
+                  ADMIN_EMAIL, DATABASE_URI, SECRET_KEY, User)
 
 from flask import Flask, render_template, flash, redirect, url_for
 from flask_admin import Admin
@@ -30,7 +34,7 @@ admin = Admin()
 # app.config['SECRET_KEY'] = 'your_generated_secret_key_here'  # For development
 # OR for production, more securely:
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'fallback_secret_key')
-
+app.config['PROFILE_PIC_FOLDER'] = 'static/profile_pics'
 migrate = Migrate(app, db)
 
 login_manager = LoginManager()
@@ -40,18 +44,14 @@ load_dotenv()  # This loads the environment variables from .env file
 
 
 
-
-print("Database:", DATABASE_URI)
-
-
-
 # Create admin page
 
 # @login_required 
 @app.route('/admin')
 def admin():
-    # id = current_user.id
-    # if id == 1:
+    if not current_user.is_admin:
+        flash('sorry you must be the admin to access the admin page...')
+        return redirect(url_for('index'))
     users = db.session.execute(db.select(User)).scalars()
     print(users)
     return render_template('admin/admin_panel.html', users=users)
@@ -83,6 +83,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    profile_pic = db.Column(db.String(120), unique=False, nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
@@ -145,6 +146,36 @@ with app.app_context():
     
 
 admin_permission = Permission(RoleNeed('admin'))
+
+
+
+
+# user routes start
+@app.route('/upload_profile_pic', methods=['POST'])
+def upload_profile_pic():
+    if request.method == 'POST':
+        # Check if the post request has the file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            return redirect(request.url)
+        if file:
+            ext = secure_filename(file.filename).split('.')[-1]
+            filename = f"{current_user.id}.{ext}"
+            file_path = os.path.join(app.config['PROFILE_PIC_FOLDER'], filename)
+            current_user.profile_pic = file_path
+            file.save(file_path)
+            db.session.commit()
+            return 'Profile picture uploaded successfully!'
+
+
+# user routes end
+
+
+
 
 
 
@@ -516,7 +547,7 @@ def list_users():
 
 
 if __name__ == '__main__':
-#     create_admin_user()
-#     list_users()
-#     total_users_count()
+    # create_admin_user()
+    # list_users()
+    # total_users_count()
     app.run(debug=True, port=5000)
