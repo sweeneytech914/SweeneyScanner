@@ -4,7 +4,7 @@ env2.py
 __pycache__/
 *.py[cod]
 *$py.class
-
+token.txt
 # C extensions
 *.so
 
