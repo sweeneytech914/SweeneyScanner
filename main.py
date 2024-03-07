@@ -81,6 +81,7 @@ def load_user(user_id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    fullname = db.Column(db.String(120), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     profile_pic = db.Column(db.String(120), unique=False, nullable=True)
@@ -482,6 +483,7 @@ def profile():
         user = User.query.get(_id)
         user.username=username
         user.email=email
+        user.fullname = fullname
         
         user.set_password(password)
         db.session.commit()
