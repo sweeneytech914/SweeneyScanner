@@ -22,7 +22,12 @@
                 <div class="card mb-4 mb-xl-0">
                     <div class="card-header">Profile Picture</div>
                     <div class="card-body text-center"> <img class="rounded-circle mb-2 image-fluid"
-                            src="{{ current_user.profile_pic }}" alt="" width="200" height="200">
+                        {% if current_user.profile_pic %}
+                            src="{{ current_user.profile_pic }}"
+                        {% else %}
+                            src="{{ url_for('static', filename='profile_pics/default_profile_pic.jpg') }}"
+                        {% endif %}
+                            alt="" width="200" height="200">
                         <div class="small font-italic text-muted mb-3">JPG or PNG no larger than 5 MB</div>
                         <button class="btn btn-primary" type="button" id="image_upload_btn">Upload new image</button>
                         <input type="file" id="hidden_file_input" style="display: none;">

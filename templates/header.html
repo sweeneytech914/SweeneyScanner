@@ -16,12 +16,21 @@ style="z-index: 999;">
                 <li class="nav-item">
                     <a class="nav-link" href="/calendar">Calendar</a>
                 </li>            
-                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>  
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">profile</a>
-                </li> 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img 
+                        {% if current_user.profile_pic %}
+                            src="{{ current_user.profile_pic }}"
+                        {% else %}
+                            src="{{ url_for('static', filename='profile_pics/default_profile_pic.jpg') }}"
+                        {% endif %}
+                        class="rounded-circle" alt="Profile" style="width: 30px; height: 30px;">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
+                        <a class="dropdown-item" href="/profile">Profile</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
+                </li>
             {% else %}
                 <li class="nav-item">
                 <a class="nav-link" href="/login">Login</a>
