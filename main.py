@@ -3,7 +3,7 @@ import os
 import base64
 import requests
 from flask import (Flask, request, render_template, redirect, 
-                   url_for, abort)
+                   url_for, abort, flash)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
@@ -21,7 +21,7 @@ from envc import (ADMIN_USERNAME, ADMIN_PASSWORD,
 from flask import Flask, render_template, flash, redirect, url_for
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-
+from utils import send_email
 
 
 app = Flask(__name__)
@@ -488,6 +488,23 @@ def profile():
         user.set_password(password)
         db.session.commit()
     return render_template('profile.html')
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if send_email(receiver_email=user.email):
+                flash("Password reset email sent!", "success")
+            else:
+                flash("Email sending failed!", "danger")
+        else:
+            flash("No account exists with this email", "warning")
+    return render_template("forgot_password.html")
+
+
 
 
 @app.route('/admin/dashboard')
