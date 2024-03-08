@@ -7,6 +7,8 @@
     <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 </head>
 <body>
     {% include 'header.html' %}
@@ -20,10 +22,50 @@
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div> -->
+
+
+                    <div class="mb-3"> 
+                        <label class="small mb-1" for="password">Password</label>
+                        <div class="d-flex flex-row form-control">
+                            <input class="w-100" id="password" type="password" placeholder="Enter your password"
+                            name="password" style="border: none; outline: none;">
+                            <i class="fa fa-eye password-icon" id="togglePassword"
+                                style="cursor: pointer; align-self: center;"></i>
+                        </div>
                     </div>
+
+                    <script>
+                        var password = document.getElementById("password");
+                        var togglePassword = document.getElementById("togglePassword");
+                    
+                        togglePassword.addEventListener('click', function () {
+                            // Check if the password is visible
+                            if (password.type === "password") {
+                                password.type = "text";
+                                togglePassword.classList.remove('fa-eye');
+                                togglePassword.classList.add('fa-eye-slash');
+                            } else {
+                                password.type = "password";
+                                togglePassword.classList.remove('fa-eye-slash');
+                                togglePassword.classList.add('fa-eye');
+                            }
+                        });
+                    </script>
+
+
+
+
+
+
+
+
+
+
+
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
                 <!-- Optional: Link to registration page -->
