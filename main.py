@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import os
 import base64
 import requests
+import random
+import string
 from flask import (Flask, request, render_template, redirect, 
                    url_for, abort, flash)
 from flask_sqlalchemy import SQLAlchemy
@@ -113,6 +115,13 @@ class User(UserMixin, db.Model):
         return str(self.id)
    
 
+class PasswordResetToken(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(200), nullable=False)
+    user = db.Column(db.Integer, db.ForeignKey('user.id')) 
+
+    def __repr__(self):
+        return f"{self.user.username}"
     
 
 
@@ -496,7 +505,19 @@ def forgot_password():
         email = request.form.get('email')
         user = User.query.filter_by(email=email).first()
         if user:
-            if send_email(receiver_email=user.email):
+            # generate random string with 50 chars
+            characters = string.ascii_letters + string.digits
+            token = ''.join(random.choice(characters) for _ in range(50))
+            # save the string in table using user as fk
+            RST = PasswordResetToken(
+                user=user.id,
+                token=token)
+            db.session.add(RST)
+            db.session.commit()
+            # build url and send it through email
+            url = f"{request.url_root}reset_password?user_id={user.id}&token={token}"
+            if send_email(receiver_email=user.email, 
+                          reset_link=url):
                 flash("Password reset email sent!", "success")
             else:
                 flash("Email sending failed!", "danger")
@@ -504,8 +525,31 @@ def forgot_password():
             flash("No account exists with this email", "warning")
     return render_template("forgot_password.html")
 
-
-
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        token = request.form.get('token')
+        user_id = request.form.get('user_id')
+        password = request.form.get('password')
+        texist = PasswordResetToken.query.filter_by(token=token,
+                                                    user=user_id).first()
+        if texist:
+            user = User.query.get(user_id)
+            user.set_password(password)
+            db.session.commit()
+            flash("Password reset succesfully. Login Please.", "success")
+            return redirect(url_for('login'))
+    elif request.method == 'GET':
+        token = request.args.get('token')
+        user_id = request.args.get('user_id')
+        texist = PasswordResetToken.query.filter_by(
+            token=token, user=user_id).first()
+        if texist:
+            return render_template('reset_password.html', 
+                                   token=texist.token, 
+                                   user_id=texist.user)
+        else:
+            return abort(404)
 
 @app.route('/admin/dashboard')
 @login_required
