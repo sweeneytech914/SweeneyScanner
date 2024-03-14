@@ -64,6 +64,8 @@
         <h3 class="ml-2">SweeneyScanner</h3>
         <a href="/admin">Users</a>
         <a href="/admin/onboarding">Onboard new user</a>
+        <!-- <a href="#">Reports</a>
+        <a href="#">Settings</a> -->
     </div>
 
     <div class="toggle-icon" onclick="toggleSidebar()">&#8942;</div> <!-- 3-dot icon -->
@@ -76,88 +78,19 @@
             >Add User</button>
         </div>
         {% include 'message.html' %}
-        <section>
-            <!-- Admin functionalities like user management, content control -->
 
-            <div class="container mt-5">
-                <table class="table table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">S.No</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Edit</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for user in users %}
-                        <tr>
-                            <th scope="row">{{ loop.index }}</th>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td><a class="btn btn-primary" href="/admin/edit_user/{{user.id}}">Edit</a></td>
-                            <td>
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-danger" data-toggle="modal" 
-                                    data-target="#delete-{{user.id}}">
-                                    Delete
-                                </button>
-                            </td>
-                            
-                            <!-- Modal -->
-                            <div class="modal fade" id="delete-{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Deleting a user</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                                    <div class="modal-body">
-                                    Are you sure about deleting "{{user.username}}"?
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a type="button" class="btn btn-danger" href="/admin/delete_user/{{user.id}}">Yes</a>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-  
+        <form action="" method="post" class="form form-group m-4">
+            <input type="email" class="form-control" required="required"
+                placeholder="Enter user email to send invitation"
+                name="email">
+            <input type="submit" value="Send Invite" 
+                class="btn btn-primary mt-2">
+        </form>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        </tr>
-                        {% endfor %}
-                        
-                    </tbody>
-                </table>
-            </div>
-              
-
-        </section>
     </div>
 
-    {#
-        {% include 'footer.html' %}
-    #}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

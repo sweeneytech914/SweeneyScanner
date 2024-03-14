@@ -77,34 +77,36 @@
             <div class="container mt-5">
                 <div class="col-xl-10 mx-auto">
                     <div class="card mb-4">
-                        <div class="card-header">Add a new user</div>
+                        <div class="card-header">Edit user</div>
                         <div class="card-body">
-                            <form action="/add_user_from_admin" method="post" 
+                            <form action="/admin/edit_user/{{user.id}}" method="post" 
                             autocomplete="off">
+    
+                                <input type="hidden" value="{{ user.id }}" name="_id">
                                 
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputUsername">Username</label> <input class="form-control"
                                             id="inputUsername" type="text" placeholder="Enter your username" 
-                                             name="username">
+                                            value="{{ user.username }}" name="username">
                                     </div>
                                     
                                     <div class="col-md-6"> <label class="small mb-1" for="inputLastName">Full Name</label>
                                         <input class="form-control" id="inputLastName" type="text"
-                                            placeholder="Enter your last name"
+                                            placeholder="Enter your last name" value="{{ user.fullname }}"
                                             name="fullname"></div>
                                 </div>
     
                                 <div class="mb-3"> 
                                     <label class="small mb-1" for="inputEmailAddress">Email address</label>
                                     <input class="form-control" id="inputEmailAddress" type="email"
-                                        placeholder="Enter your email address"
+                                        placeholder="Enter your email address" value="{{ user.email }}"
                                         name="email">
                                 </div>
                                 <div class="mb-3"> 
                                     <label class="small mb-1" for="password">Password</label>
                                     <input class="form-control" id="password" type="password"
-                                        placeholder="Enter your password" 
+                                        placeholder="Enter your password" value="{{ user.password }}"
                                         name="password">
                                         <i class="fa fa-eye password-icon" id="togglePassword" style="position: absolute; top: 75%; right: 30px; transform: translateY(-50%); cursor: pointer;"></i>
                                 </div>
@@ -138,9 +140,6 @@
         </section>
     </div>
 
-    {#
-        {% include 'footer.html' %}
-    #}
 
     <script>
         function toggleSidebar() {

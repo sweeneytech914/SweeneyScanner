@@ -6,6 +6,11 @@ style="z-index: 999;">
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                 <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+            {% endif %}
             {% if current_user.is_authenticated %}
                  <li class="nav-item">
                     <a class="nav-link" href="/view_entries">Entries</a>

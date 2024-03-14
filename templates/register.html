@@ -7,12 +7,17 @@
 </head>
 <body>
         {% include 'header.html' %}
+        {% include 'message.html' %}
 
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <h2 class="mt-5">Register</h2>
                 <form method="POST" action="{{ url_for('register') }}">
+
+                    <input type="hidden" value="{{remail}}" name="remail">
+                    <input type="hidden" value="{{token}}" name="token">
+
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>

@@ -57,20 +57,88 @@ def admin():
     users = db.session.execute(db.select(User)).scalars()
     print(users)
     return render_template('admin/admin_panel.html', users=users)
-    # else:
-    #     flash('sorry you must be the admin to access the admin page...')
-    #     return redirect(url_for('dashboard'))
 
-@app.route('/add_user_from_admin')
+
+@app.route('/add_user_from_admin', methods=['GET', 'POST'])
 def add_user():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        fullname = request.form.get('fullname')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User(
+            username=username,
+            fullname=fullname,
+            email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        flash(f"User: '{username}' has been created successfully.", 'success')
+        return redirect(url_for('admin'))
     return render_template('admin/add_user.html')
 
 
+@app.route('/admin/edit_user/<id>', methods=['GET', 'POST'])
+def edit_user(id):
+    user = User.query.get(id)
+    if request.method == 'POST':
+        username=request.form.get('username')
+        fullname=request.form.get('fullname')
+        email=request.form.get('email')
+        password=request.form.get('password')
 
-@app.route('/admin/edit_user')
-def edit_user():
+        user.username = username
+        user.fullname = fullname
+        user.email = email
+        user.set_password(password)
 
-    return render_template('admin_panel.html')
+        db.session.commit()
+        flash(f"User: '{username}' has been modified", 'warning')
+        return redirect(url_for('admin'))
+    return render_template('admin/edit_user.html', user=user)
+
+
+@app.route('/admin/delete_user/<id>')
+def delete_user(id):
+    if not current_user.is_admin:
+        flash('You are not authorised for deleting a user', 'warning')
+        return redirect(url_for('admin'))
+    user = User.query.get(id)
+    if user:
+        uname = user.username
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"User: '{uname}' has been deleted!", 'danger')
+        return redirect(url_for('admin'))
+    else:
+        flash('User not found', 'warning')
+        return redirect(url_for('admin'))
+
+@app.route('/admin/onboarding', methods=['GET', 'POST'])
+def onboarding():
+    if request.method == "POST":
+        email = request.form.get('email')
+        # generate random string with 50 chars
+        characters = string.ascii_letters + string.digits
+        token = ''.join(random.choice(characters) for _ in range(50))
+        subject= "Invitation for Sign up!"
+        url = f"{request.url_root}register?email={email}&token={token}"
+        body = f"""Hi,
+                    You have been invited to sign up on our platform.
+                    Use below link for signing up.
+                    {url}"""
+        send_email(receiver_email=email, subject=subject, body=body)
+        onb = Onboarding(
+            email=email,
+            token=token,
+        )
+        db.session.add(onb)
+        db.session.commit()
+        flash("Email has been sent to the user for onboarding", 'success')
+
+    return render_template('admin/onboarding.html')
+
+
 
 
 @login_manager.user_loader
@@ -122,7 +190,15 @@ class PasswordResetToken(db.Model):
 
     def __repr__(self):
         return f"{self.user.username}"
-    
+
+class Onboarding(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    is_registered =  db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f"{self.email}"
 
 
 class Company(db.Model):
@@ -442,6 +518,12 @@ def update_entry_by_id(entry_id):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        remail = request.form.get('remail')
+        token = request.form.get('token')
+        onb = Onboarding.query.filter_by(email=remail, token=token).first()
+        if not onb:
+            flash("token not matching", 'danger')
+            return redirect(request.url)
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -450,11 +532,19 @@ def register():
 
         new_user = User(username=username, email=email, password_hash=hashed_password)
         db.session.add(new_user)
+        onb.is_registered = True
         db.session.commit()
 
         return redirect(url_for('login'))
-    
-    return render_template('register.html')
+    elif request.method == 'GET':
+        remail = request.args.get('email')
+        token = request.args.get('token')
+        onb = Onboarding.query.filter_by(email=remail, token=token).first()
+        if onb:
+            return render_template('register.html', remail=remail,
+                                   token=token)
+        else:
+            return abort(404)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -516,8 +606,11 @@ def forgot_password():
             db.session.commit()
             # build url and send it through email
             url = f"{request.url_root}reset_password?user_id={user.id}&token={token}"
+            subject = "Reset Your Password"
+            body = f"""Hi {user.username}, 
+                        Please reset your account's password: {url}"""
             if send_email(receiver_email=user.email, 
-                          reset_link=url):
+                          subject=subject, body=body):
                 flash("Password reset email sent!", "success")
             else:
                 flash("Email sending failed!", "danger")
@@ -550,6 +643,7 @@ def reset_password():
                                    user_id=texist.user)
         else:
             return abort(404)
+
 
 @app.route('/admin/dashboard')
 @login_required
